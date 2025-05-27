@@ -1,4 +1,4 @@
-# Multi-Scale-Groundwater-Monitoring-in-the-Amazon-Integrating-Satellite-and-In-Situ-well-data-with-ML
+# Predicting Monthly Groundwater Storage Changes in the Amazon Basin: A Multi-Sensor Machine Learning Approach Using GRACE, Sentinel-1, and Ground-Based Observations
 
 # Project Overview
 The Amazon region's abundant surface water contrasts with its heavy reliance on groundwater, with over two-thirds of its urban population depending on this resource for domestic and industrial use. The Alter do Chão Aquifer (ACA) is one of Brazil's largest and most strategically important freshwater resources, extending beneath parts of the Amazonas, Pará, and Amapá states. Despite its significance, the monthly dynamics and storage changes of the ACA remain poorly understood, particularly regarding the relationship between regional satellite-derived storage changes and local groundwater fluctuations measured at well sites.
@@ -81,7 +81,7 @@ Given the small dataset—comprising only 12 months of Sentinel-1, GRACE, and GL
 
 The Linear Regression model achieved exceptional predictive performance, with a cross-validation R² of 0.822, successfully explaining 82% of the variance in groundwater storage through integrated multi-sensor features. The training R² of 0.968 indicates strong pattern learning with only moderate overfitting, acceptable given the robust cross-validated results. The mean absolute error of 17.5 ± 13 cm, or roughly 11% of the total signal range, offers high precision suitable for groundwater monitoring, resource management, and trend analysis. A strong correlation (r = 0.888) between GRACE-derived regional storage and in-situ well measurements underscores the model’s ability to capture cross-scale aquifer dynamics. Feature importance analysis highlights the value of combining direct storage changes, groundwater anomalies, Sentinel-1 surface moisture indicators, and seasonal components, resulting in a synergistic model that captures the full complexity of groundwater behavior far beyond what single-source models can achieve.
 
-- **Uncertainty Analysis**
+## **Uncertainty Analysis**
 
 Understanding how confident we can be in each prediction is crucial—especially with a small dataset of only 12 months. To address this, I implemented two complementary uncertainty quantification methods:
 
@@ -95,7 +95,19 @@ Importantly, the majority of observed values fall within both uncertainty bounds
 
 ![image alt](https://github.com/DomWeisser/Multi-Scale-Groundwater-Monitoring-in-the-Amazon-Integrating-Satellite-and-In-Situ-well-data-with-ML/blob/997f4358d4da4851065c370c9f23a792dd439fc2/Images/uncertainty_time_series.png)
 
+## Anomaly Detection
 
+Anomaly detection plays a crucial role in groundwater monitoring by identifying months where storage behavior deviates significantly from expected seasonal patterns. In data-scarce environments like the Amazon, where consistent long-term in-situ records are limited, anomaly detection helps flag unusual events that might indicate early signs of groundwater stress, measurement errors, or changes in climate and land use impacts.
+
+In this project, I implemented three complementary methods to detect anomalies in monthly groundwater storage changes:
+- Isolation Forest (machine learning-based),
+- Elliptic Envelope (geometric outlier detection), and
+- Z-score analysis (traditional statistical thresholding).
+
+By using a consensus approach across these methods, the framework identified January, July, and December as consistently anomalous. Each of these months corresponds to a critical point in the Amazonian hydrological cycle:
+- January: The start of the time series and the baseline month, potentially skewed due to its role as a reference point.
+- July: The peak of the dry season, when groundwater reaches its lowest levels and aquifer stress is likely highest.
+- December: A transition period marking the start of wet season recharge, often associated with rapid storage changes.
 
 # Limitations and Uncertainties 
 Data Limitations
