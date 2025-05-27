@@ -47,48 +47,65 @@ The well data represents monthly groundwater level changes, directly measured by
 
 - GRACE/GLDAS Processing:
 
-The GRACE dataset provides Total Water Storage (TWS) anomalies, representing the sum of all water stored on and within the Earth's landmasses, including surface water (rivers, lakes), soil moisture, snow, ice, and groundwater. GRACE data is retrieved at 1-degree spatial resolution (~111 km grid spacing, as evidenced by longitude coordinates from 0.5° to 359.5° with 360 grid points) and a monthly time step. The GLDAS dataset offers estimates for various components of surface water storage, such as soil moisture (across different layers: 0-10 cm, 10-40 cm, 40-100 cm, 100-200 cm), snow water equivalent (SWE), and canopy water storage, at 0.25-degree resolution (~25 km grid spacing, as shown by 1440 longitude points covering -179.88° to 179.88°). Using these datasets, I calculate the groundwater storage anomalies within my region of interest using the water balance approach with the equation:
+The GRACE dataset provides Total Water Storage (TWS) anomalies, representing the sum of all water stored on and within the Earth's landmasses, including surface water, soil moisture, snow, ice, and groundwater. GRACE data is retrieved at a 1-degree spatial resolution and a monthly time step. The GLDAS dataset provides surface water components such as soil moisture (across layers: 0-10 cm, 10-40 cm, 40-100 cm, 100-200 cm), snow water equivalent (SWE), and canopy water storage, at a 0.25-degree resolution. Using these datasets, I calculate the groundwater storage anomaly (GWSA) within the region of interest using the water balance approach: (TALK ABOUT THE UP/DOWN SAMPLING I'VE DONE)
 
 Groundwater Storage Anomaly (GWSA) = TWS - (Soil Moisture + Snow Water + Canopy Water)
 
-From these anomalies, I further derive the month-on-month change in groundwater level, representing the average change in groundwater storage from one month to the next within the region of interest.
+From these anomalies, I derive the month-on-month change in groundwater level, representing the average change in groundwater storage from one month to the next, used as the primary variable for prediction.
+
+![image alt](https://github.com/DomWeisser/Multi-Scale-Groundwater-Monitoring-in-the-Amazon-Integrating-Satellite-and-In-Situ-well-data-with-ML/blob/33dd6aa3a78b9723947cdfa60cf03ec2764df239/Images/grace_gwa_change_analysis%20(1).png)
 
 
-- Sentinel-1 Processing: Extracted VH polarization backscatter statistics as regional monthly averages
+- Sentinel-1 Processing:
+
+Sentinel-1 backscatter data (VV and VH polarizations) are processed to compute regional monthly averages. These statistics capture surface conditions that may correlate with groundwater dynamics, such as soil moisture or vegetation changes.
+
+<table>
+  <tr>
+    <td><img src="https://github.com/DomWeisser/Multi-Scale-Groundwater-Monitoring-in-the-Amazon-Integrating-Satellite-and-In-Situ-well-data-with-ML/blob/27b858c6a9443c39e3a530111d09b8fe353f4489/Images/sentinel1_analysis.png" alt="Monthly mean well depth" width="400"></td>
+    <td><img src="https://github.com/DomWeisser/Multi-Scale-Groundwater-Monitoring-in-the-Amazon-Integrating-Satellite-and-In-Situ-well-data-with-ML/blob/27b858c6a9443c39e3a530111d09b8fe353f4489/Images/sentinel1_normalized_analysis.png" alt="Second image" width="400"></td>
+  </tr>
+</table>
+
 
 ## Machine Learning Framework
-Challenge: Traditional ML approaches fail with limited data (12 monthly samples). This study implements scientifically appropriate methods for small datasets:
-1. Bayesian Uncertainty Quantification
+With only 12 monthly samples, traditional ML approaches risk overfitting. This study implements methods tailored for small datasets:
 
-Purpose: Provides honest uncertainty estimates for predictions
-Method: Bayesian Ridge Regression with proper regularization
-Output: Predictions with confidence intervals (±1.0 cm typical uncertainty)
 
-2. Leave-One-Out Cross-Validation
+Bayesian Uncertainty Quantification
 
-Purpose: Unbiased performance evaluation for small datasets
-Method: Each month predicted using remaining 11 months as training
-Advantage: No data leakage, realistic performance estimates
+Purpose: Quantify prediction uncertainty for groundwater changes.
+Method: Bayesian Ridge Regression with regularization to provide honest uncertainty estimates.
+Output: Predictions with confidence intervals (±23.772 cm mean uncertainty).
 
-3. Anomaly Detection
+Leave-One-Out Cross-Validation (LOO)
 
-Purpose: Identifies unusual months in groundwater patterns
-Method: Random Forest classification of seasonal deviations
-Output: Anomalous periods and driving factors
+Purpose: Unbiased performance evaluation for small datasets.
+Method: Each month is predicted using the remaining 11 months as training data.
+
+Anomaly Detection
+
+Purpose: Identify unusual groundwater patterns
+Method: Random Forest classification to detect seasonal deviations.
+Output: Anomalous months and their driving factors.
 
 ## Scale Relationship Analysis
-Key Finding: Strong negative correlation (r = -0.699, p = 0.011) between GRACE regional anomalies and local well storage changes.
+Strong positive correlation (r = 0.886, p = 0.000) between GRACE regional month-on-month changes and local well storage changes.
+
 Physical Interpretation:
 
-GRACE data: Regional anomalies relative to 2004-2009 baseline (always negative, indicating regional water deficit)
-Well data: Local changes relative to historical baseline (positive values indicating above-average conditions)
-Negative correlation: When regional storage is most depleted, local aquifers show highest relative storage
+GRACE Data: Represents regional groundwater changes derived from TWS anomalies, adjusted for surface water components.
 
-This relationship suggests scale-dependent hydrological processes where local aquifer conditions do not directly mirror regional patterns, potentially due to:
+Well Data: Local month-on-month changes in groundwater storage, reflecting aquifer-level dynamics.
 
-Different reference baselines between datasets
-Local vs regional aquifer connectivity
-Temporal response differences between measurement scales
+Positive Correlation: Indicates that regional GRACE changes align closely with local well measurements, suggesting consistent hydrological processes at both scales in this region.
+
+
+Implications:
+
+Validates GRACE as a reliable proxy for local groundwater changes in this context.
+
+Suggests good aquifer connectivity between local and regional scales, with minimal lag in response times.
 
 # Results 
 ## Temporal Pattern Analysis
