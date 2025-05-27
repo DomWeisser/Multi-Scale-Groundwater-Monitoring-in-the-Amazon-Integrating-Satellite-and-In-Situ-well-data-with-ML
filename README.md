@@ -2,26 +2,26 @@
 
 # Project Overview
 The Amazon region's abundant surface water contrasts with its heavy reliance on groundwater, with over two-thirds of its urban population depending on this resource for domestic and industrial use. The Alter do Chão Aquifer (ACA) is one of Brazil's largest and most strategically important freshwater resources, extending beneath parts of the Amazonas, Pará, and Amapá states. Despite its significance, the monthly dynamics and storage changes of the ACA remain poorly understood, particularly regarding the relationship between regional satellite-derived storage changes and local groundwater fluctuations measured at well sites.
-This study develops a comprehensive machine learning framework to predict monthly groundwater storage changes using multi-sensor satellite observations. The research addresses critical challenges in Amazon groundwater monitoring by establishing direct relationships between GRACE-derived regional storage changes and local well measurements, enhanced by surface moisture indicators from Sentinel-1 radar and seasonal pattern analysis. The innovative approach combines multiple data sources to achieve 82% variance explanation in groundwater storage change predictions, providing both point estimates and uncertainty quantification essential for water resource management in data-sparse regions.
+This study develops a machine learning (ML) framework to predict monthly groundwater storage changes using multi-sensor satellite observations. The research addresses challenges in Amazon groundwater monitoring by establishing direct relationships between GRACE-derived regional storage changes and local well measurements, enhanced by surface moisture indicators from Sentinel-1 radar and seasonal pattern analysis. The approach combines multiple data sources to achieve 82% variance explanation in groundwater storage change predictions, providing both point estimates and uncertainty quantification essential for data-sparse regions.
 Key contributions include quantifying scale relationships between regional GRACE storage changes and local well dynamics, developing robust uncertainty quantification methods using Bayesian and bootstrap approaches, and demonstrating the effectiveness of comprehensive multi-sensor feature integration for groundwater monitoring applications. The framework provides operationally useful prediction intervals (±17.5 cm) suitable for trend detection, anomaly identification, and informed water management decision-making in remote Amazon regions.
 
 # Study Area
 
-The analysis focuses on a ~400 km² region in central Amazon, Pará State, Brazil (60.8°W–58.2°W, 3.7°S–1.7°S), selected for its hydrogeological diversity and suitability for integrating satellite data with local well measurements. The area features high-porosity sandy formations typical of the Alter do Chão Aquifer, enabling strong regional–local groundwater connectivity (r = 0.888). With clear wet (Nov–Apr) and dry (May–Oct) seasons, it provides ideal conditions for capturing seasonal groundwater dynamics. Sparse ground infrastructure further emphasizes the value of remote sensing and robust uncertainty quantification in monitoring groundwater in data-limited regions.
+The analysis focuses on a ~60,000 km² region in central Amazon, Pará State, Brazil (60.8°W–58.2°W, 3.7°S–1.7°S), selected for its hydrogeological diversity and suitability for integrating satellite data with local well measurements. The area features high-porosity sandy formations typical of the Alter do Chão Aquifer, enabling strong regional–local groundwater correlation (r = 0.888). With clear wet (Nov–Apr) and dry (May–Oct) seasons, it provides ideal conditions for capturing seasonal groundwater dynamics. Sparse ground infrastructure further emphasizes the value of remote sensing and robust uncertainty quantification in monitoring groundwater in data-limited regions.
 
 # Datasets
 
-- GRACE (Gravity Recovery and Climate Experiment): GRACE is a satellite mission that measures tiny changes in Earth's gravity field caused by shifts in mass—primarily water movement. By detecting how much mass is added or lost in a region each month, GRACE provides regional estimates of total water storage (including groundwater, soil moisture, surface water, and snow) over time. It’s especially valuable for monitoring groundwater in areas with limited on-the-ground data.
+- GRACE (Gravity Recovery and Climate Experiment): GRACE is a satellite mission that measures tiny changes in Earth's gravity field caused by shifts in mass — primarily due to water movement. By detecting how much mass is added or lost in a region each month, GRACE provides regional estimates of total water storage (including groundwater, soil moisture, surface water, and snow) over time. It’s especially valuable for monitoring groundwater in areas with limited on-the-ground data.
 
-- GLDAS (Global Land Data Assimilation System): GLDAS is a land surface modeling system that uses satellite and ground-based observations to simulate surface water storage components like soil moisture, canopy water, and snow. When paired with GRACE, GLDAS helps separate the groundwater component by subtracting surface contributions—allowing us to estimate how much water is stored underground.
+- GLDAS (Global Land Data Assimilation System): GLDAS is a land surface modeling system that uses satellite and ground-based observations to simulate surface water storage components like soil moisture, canopy water, and snow. When paired with GRACE, GLDAS helps separate the groundwater component by subtracting surface contributions, allowing us to estimate how much water is stored underground.
 
 - Sentinel-1: Offers high-resolution surface moisture indicators via dual-polarization radar (VV/VH), adding local-scale context to improve model predictions.
 
-- In-situ Wells: Deliver point-scale groundwater level measurements, used as both the target variable and validation benchmark for satellite-derived estimates.
+- In-situ Wells: Point-scale groundwater level measurements, used as both the target variable.
 
 | Dataset | Source | Temporal Resolution | Spatial Resolution | Coverage | Format |
 | --- | --- | --- | --- | --- | --- |
-| GRACE-FO | NASA JPL | Monthly (2019)  | 0.5 x 0.5 | Global | NetCDF |
+| GRACE-FO | NASA JPL | Monthly (2019)  | 1° x 1° | Global | NetCDF |
 | GLDAS-2.1 Noah | NASA GSFC | Monthly (2019) | 0.25° x 0.25°  | Global | NetCDF |
 | Well Measurements | RIMAS (Brazil) | Monthly (2019) | Point-based  | 4 wells in ROI | CSV |
 | Sentinel-1 SAR | ESA Copernicus | Monthly (2019) | 10m  | Regional ROI | Geo TIFF |
@@ -41,7 +41,7 @@ The region of Interst is extracted from Sentinel-1 image coverage with a 0.05° 
 
 - **Well Data Analysis:**
 
-The well data represents monthly groundwater level changes, directly measured by the RIMAS monitoring network within Brazilian aquifers. The graph below illustrates the average month-on-month change in groundwater levels across the 4 wells that fall within my region of interest. It clearly depicts the hydrological cycle, showing significant groundwater level increases during the wet season, with a lag of 1-2 months into June, followed by marked declines during the dry season with a similar lag period.
+The well data represents monthly groundwater level changes, directly measured by the RIMAS monitoring network within Brazilian aquifers. The graph below illustrates the **average month-on-month change in groundwater levels** across the 4 wells that fall within my region of interest. It clearly depicts the hydrological cycle, showing significant groundwater level increases during the wet season, with a lag of 1-2 months into June, followed by marked declines during the dry season with a similar lag period.
 
 ![image alt](https://github.com/DomWeisser/Multi-Scale-Groundwater-Monitoring-in-the-Amazon-Integrating-Satellite-and-In-Situ-well-data-with-ML/blob/7946eea39a512b3a0fb471044ede44492f6ef97c/Images/well_analysis%20(1).png)
 
@@ -52,7 +52,7 @@ The GRACE dataset provides Total Water Storage (TWS) anomalies, representing the
 
 Groundwater Storage Anomaly (GWSA) = TWS - (Soil Moisture + Snow Water + Canopy Water)
 
-From these anomalies, I derive the month-on-month change in groundwater level, representing the average change in groundwater storage from one month to the next, used as the primary variable for prediction.
+From these anomalies, I derive the **month-on-month change in groundwater level**, used as the primary variable for prediction.
 
 ![image alt](https://github.com/DomWeisser/Multi-Scale-Groundwater-Monitoring-in-the-Amazon-Integrating-Satellite-and-In-Situ-well-data-with-ML/blob/33dd6aa3a78b9723947cdfa60cf03ec2764df239/Images/grace_gwa_change_analysis%20(1).png)
 
@@ -110,31 +110,11 @@ By using a consensus approach across these methods, the framework identified Jan
 - December: A transition period marking the start of wet season recharge, often associated with rapid storage changes.
 
 # Limitations and Uncertainties 
-Data Limitations
+This analysis faces key limitations primarily due to the small 12-month dataset, which constrains model complexity and increases sensitivity to assumptions. While the Linear Regression model explains 82% of groundwater storage variance—remarkable for such limited data—some overfitting is evident (training R² = 0.968 vs. cross-validated R² = 0.822).
 
-Temporal scope: Single year (2019) limits long-term trend analysis
-Spatial coverage: Small ROI (~400 km²) may not represent broader Amazon
-Well density: Only 4 wells for ground truth validation
-Scale mismatch: GRACE pixels (~100 km) vs. point measurements
+Several simplifying assumptions introduce uncertainty: averaging four wells may obscure local-scale variability, Sentinel-1 backscatter is spatially averaged, and GRACE/GLDAS data assume regional uniformity across a coarse grid. Additionally, the model treats monthly samples as independent, which may not fully reflect temporal hydrological dynamics.
 
-Methodological Considerations
-
-Small sample size: 12 monthly observations limit ML model complexity
-Reference baseline differences: GRACE and well data use different historical baselines
-Interpolation uncertainty: Limited well data restricts spatial interpolation accuracy
-
-Statistical Caveats
-
-Cross-validation performance may be optimistic due to temporal autocorrelation
-Feature selection limited by sample size constraints
-Generalization beyond study period uncertain
-
-# Future Research Directions
-- Multi-year analysis to validate temporal patterns and assess climate variability impacts
-- Expanded spatial coverage across different Amazon sub-regions
-- Integration of precipitation data to understand driving mechanisms
-- Lag analysis to quantify response times between datasets
-- Comparison with hydrological models for process understanding
+While scale mismatches between point-scale well measurements and coarse-resolution satellite data introduce some uncertainty, the strong correlation (r = 0.888) between the two suggests robust cross-scale consistency within this aquifer system. This project serves as a proof of concept, demonstrating the viability of satellite-driven groundwater prediction in data-sparse regions and laying the groundwork for more detailed, multi-year analysis in the future.
 
 
 
