@@ -81,6 +81,15 @@ Given the small dataset—comprising only 12 months of Sentinel-1, GRACE, and GL
 
 The Linear Regression model achieved exceptional predictive performance, with a cross-validation R² of 0.822, successfully explaining 82% of the variance in groundwater storage through integrated multi-sensor features. The training R² of 0.968 indicates strong pattern learning with only moderate overfitting, acceptable given the robust cross-validated results. The mean absolute error of 17.5 ± 13 cm, or roughly 11% of the total signal range, offers high precision suitable for groundwater monitoring, resource management, and trend analysis. A strong correlation (r = 0.888) between GRACE-derived regional storage and in-situ well measurements underscores the model’s ability to capture cross-scale aquifer dynamics. Feature importance analysis highlights the value of combining direct storage changes, groundwater anomalies, Sentinel-1 surface moisture indicators, and seasonal components, resulting in a synergistic model that captures the full complexity of groundwater behavior far beyond what single-source models can achieve.
 
+<table>
+  <tr>
+    <td><img src="https://github.com/DomWeisser/Multi-Scale-Groundwater-Monitoring-in-the-Amazon-Integrating-Satellite-and-In-Situ-well-data-with-ML/blob/c2a5cfdc9e25688f0b20a8f92c36ba74cc72c651/Images/Model%20Comparison.png" alt="Monthly mean well depth" width="400"></td>
+    <td><img src="https://github.com/DomWeisser/Multi-Scale-Groundwater-Monitoring-in-the-Amazon-Integrating-Satellite-and-In-Situ-well-data-with-ML/blob/c2a5cfdc9e25688f0b20a8f92c36ba74cc72c651/Images/Best%20Model%20Performance.png" alt="Second image" width="400"></td>
+  </tr>
+</table>
+
+
+
 ## **Uncertainty Analysis**
 
 Understanding how confident we can be in each prediction is crucial—especially with a small dataset of only 12 months. To address this, I implemented two complementary uncertainty quantification methods:
