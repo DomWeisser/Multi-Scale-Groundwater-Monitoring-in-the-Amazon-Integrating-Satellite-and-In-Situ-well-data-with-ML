@@ -74,11 +74,11 @@ Monthly averages of Sentinel-1 backscatter (VV and VH polarisations) are used to
 
 # Results 
 ## Machine Learning Framework
-In this analysis, I apply three machine learning (ML) models - Linear Regression, Ridge Regression and Bayesian Ridge Regression - to predict month-to-month changes in groundwater levels in the region of interest. The feature set I use includes GRACE-derived groundwater storage changes (month-to-month), groundwater anomalies (GWA), Sentinel-1 mean backscatter values (S1_mean_VH and S1_mean_VV). Additionally, temporal features, sine and cosine transformations of the month, were used to model systematic seasonal cycles independent of specific climate anomalies. 
+In this analysis, I apply three machine learning (ML) models - Linear Regression, Ridge Regression and Bayesian Ridge Regression - to predict month-to-month changes in groundwater levels in the region of interest. The feature set I use includes GRACE-derived groundwater storage changes (month-to-month), groundwater anomalies (GWA), Sentinel-1 mean backscatter values (S1_mean_VH and S1_mean_VV). Additionally, I used temporal features, sine and cosine transformations of the month, to model systematic seasonal cycles independent of specific climate anomalies. 
 
 Given the small dataset, comprising only 12 months of Sentinel-1, GRACE and GLDAS data, careful validation is essential to avoid overfitting. I implement Leave-one-out Cross Validation which trains the model on 11 months and tests on the remaining month for each iteration.
 
-The Linear Regression model achieved the best predictive performance, with a cross-validation R² of 0.822, successfully explaining 82% of the variance in groundwater storage and achieving a mean absolute error of 17.5 ± 13cm. The training R² of 0.968 indicates strong pattern learning with moderate overfitting which was as expected given the sample-feature ratio. Ridge Regression and Bayesian Ridge Regression achieve CV R² of 0.586 and 0.674 respectively.
+The Linear Regression model achieved the best predictive performance, with a cross-validation R² of 0.822, successfully explaining 82% of the variance in groundwater storage and achieving a mean absolute error of 17.5 ± 13cm. The training R² of 0.968 indicates strong pattern learning with moderate overfitting due to the difference with the cross-validated results. This is expected given the sample-feature ratio. Ridge Regression and Bayesian Ridge Regression achieve CV R² of 0.586 and 0.674 respectively.
 
 <table>
   <tr>
@@ -93,13 +93,13 @@ Below is a table showing the correlations between each feature and the target va
 
 ## **Uncertainty Analysis**
 
-Understanding how confident we can be in each prediction is crucial—especially with a small dataset of only 12 months. To address this, I implemented two uncertainty quantification methods:
+Understanding how confident we can be in each prediction is crucial, especially with a small dataset of only 12 months. To address this, I implemented two uncertainty quantification methods:
 
 - Bayesian Ridge Regression provides internal model-based uncertainty, estimating prediction intervals of approximately ±23 cm.
 
 - Bootstrap resampling (100 iterations) captures variability introduced by the data itself, producing wider intervals of ±36 cm.
 
-Despite the dataset's limited size, results are promising. Bayesian predictions (red squares) closely track actual well measurements (blue circles) throughout the year, successfully capturing seasonal dynamics from +80 cm in the wet season to -70 cm in the dry season. However, the wider bootstrap intervals (green shading) highlight that small sample size introduces greater variability than the model alone anticipates. The ~60% difference between the two interval widths provides a valuable insight: while the model performs well on available data, the more conservative bootstrap intervals offer a more reliable basis for real-world decision-making.
+Despite the dataset's limited size, results are promising. Bayesian predictions (red squares) closely track actual well measurements (blue circles) throughout the year, successfully capturing seasonal dynamics from +80 cm in the wet season to -70 cm in the dry season. However, the wider bootstrap intervals (green shading) highlight that small sample size introduces variability. The ~60% difference between the two interval widths provides a valuable insight: while the model performs well on available data, the more conservative bootstrap intervals offer a more reliable basis for real-world decision-making.
 
 Importantly, the majority of observed values fall within both uncertainty bounds—especially during key seasonal transitions.
 
@@ -107,9 +107,13 @@ Importantly, the majority of observed values fall within both uncertainty bounds
 
 ## Feature Importance
 
-Feature importance analysis helped highlight which variables matter most when predicting changes in groundwater storage—key for understanding what drives aquifer behavior. This is especially useful in data-scarce regions like the Amazon, where long-term ground measurements are limited. By showing which remote sensing signals and seasonal trends are most valuable, the analysis can also help focus future data collection efforts.
+Feature importance analysis helps highlight which variables matter most when predicting changes in groundwater storage, key for understanding what drives aquifer behavior. This is especially useful in data-scarce regions like the Amazon, where long-term ground measurements are limited. By showing which remote sensing signals and seasonal trends are most valuable, the analysis can also help focus future data collection efforts.
 
-In this project, I used several models (LinearRegression, Ridge, and Bayesian Ridge) and methods to assess feature importance. Across the board, GRACE satellite data stood out as the most important predictor, confirming its strong link to groundwater changes. Sentinel-1 radar data, especially VH polarization, was also highly influential in some models, likely reflecting interactions between vegetation and surface water. Seasonal patterns showed moderate importance, especially the cosine signal tied to the annual water cycle. Regularization in Ridge made feature contributions more balanced, while the Bayesian model added uncertainty estimates to the rankings. Overall, the findings reinforce GRACE data as the backbone of groundwater monitoring, with radar inputs offering valuable backup—particularly useful when GRACE data isn’t available.
+In this project, I used several  methods to assess feature importance. Across the board, GRACE satellite data stood out as the most important predictor, confirming its strong link to groundwater changes. Sentinel-1 radar data, especially VH polarization, was also highly influential in some models, likely reflecting interactions between vegetation and surface water. Seasonal patterns showed moderate importance, especially the cosine signal tied to the annual water cycle. Regularization in Ridge made feature contributions more balanced, while the Bayesian model added uncertainty estimates to the rankings. Overall, the findings reinforce GRACE data as the backbone of groundwater monitoring, with radar inputs offering valuable backup—particularly useful when GRACE data isn’t available.
+
+
+
+
 
 # Limitations and Uncertainties 
 Several simplifying assumptions introduce uncertainty within my analysis. Averaging four wells obscured local-scale variability, Sentinel-1 backscatter is spatially averaged over a large region, and GRACE/GLDAS data assume regional uniformity across a coarse grid. Furthermore, while the results from the ML models are promising, it needs to be remembered only 12 months of data has been used which constrains model complexity and increases sensitivity to model assumptions. 
