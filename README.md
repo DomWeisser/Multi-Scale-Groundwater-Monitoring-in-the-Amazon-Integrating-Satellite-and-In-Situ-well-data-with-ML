@@ -64,7 +64,7 @@ From the GWSA time series, I calculate the **month-on-month change in groundwate
 
 - **Sentinel-1 Processing:**
 
-For my analysis, I averaged Sentinel-1 backscatter (VV and VH polarisations) across the entire region of interst to create point-based values consistent with the well data and GRACE/GLDAS groundwater datasets. These regional averages are used to capture surface conditions that may relate to underlying groundwater dynamics. The graphs below show how these raw and normalised averages change throughout the year. 
+For my analysis, I averaged Sentinel-1 backscatter (VV and VH polarisations) across the entire region of interst to create point-based values consistent with the well data and GRACE/GLDAS groundwater datasets. These averages are used to capture surface conditions that may relate to underlying groundwater dynamics. The graphs below show how these raw and normalised averages change throughout the year. 
 
 Based on Amazon hydrology, I would expect high backscatter during the wet season due to increased surface mositure, standing water and lush vegetations, and lower backscatter during the dry season due to reduced surface moisture abd vegetation stress. When looking at the normalised graph complex seasonal patterns emerge that align with but also deviate from expected Amazon seasonality. Patterns matching expectations include the peak in January coninciding with wet season onset, the August minimum representing peak dry season conditions, and the October VH peak aligning with the dry-to-wet season transitions. Unexpected patterns include the pronounced July VV peak and the reduction in values in November-December.
 
@@ -79,11 +79,11 @@ These complex patterns reflect the realistic consequences of my spatial simplifi
 
 # Results 
 ## Machine Learning Framework
-In this analysis, I apply three machine learning (ML) models - Linear Regression, Ridge Regression and Bayesian Ridge Regression - to predict month-to-month changes in groundwater levels in the region of interest. The feature set I use includes GRACE-derived groundwater storage changes (month-to-month), groundwater anomalies (GWA), Sentinel-1 mean backscatter values (S1_mean_VH and S1_mean_VV). Additionally, I used temporal features, sine and cosine transformations of the month, to model systematic seasonal cycles independent of specific climate anomalies. 
+In this analysis, I apply three machine learning models - Linear Regression, Ridge Regression and Bayesian Ridge Regression - to predict month-to-month changes in groundwater levels for my region of interest. The feature set I use includes month-to-month GRACE/GLDAS-derived groundwater storage changes in line with the target variable but with a much larger spatial resolution, GRACE/GLDAS derived groundwater anomalies from a basline (GWA), Sentinel-1 mean backscatter values (S1_mean_VH and S1_mean_VV). Additionally, I used temporal features, sine and cosine transformations of the month, to model seasonal cycles. 
 
 Given the small dataset, comprising only 12 months of Sentinel-1, GRACE and GLDAS data, careful validation is essential to avoid overfitting. I implement Leave-one-out Cross Validation which trains the model on 11 months and tests on the remaining month for each iteration.
 
-The Linear Regression model achieved the best predictive performance, with a cross-validation R² of 0.822, successfully explaining 82% of the variance in groundwater storage and achieving a mean absolute error of 17.5 ± 13cm. The training R² of 0.968 indicates strong pattern learning with moderate overfitting due to the difference with the cross-validated results. This is expected given the sample-feature ratio. Ridge Regression and Bayesian Ridge Regression achieve CV R² of 0.586 and 0.674 respectively.
+The Linear Regression model achieved the best predictive performance, with a cross-validation R² of 0.822, successfully explaining 82% of the variance in monthly groundwater storage changes and achieving a mean absolute error of 17.5 ± 13cm. The training R² of 0.968 and MAE of 7.5cm indicates strong pattern learning with moderate overfitting due to the difference with the cross-validated results. This moderate overfitting is expected given the sample-feature ratio. Ridge Regression and Bayesian Ridge Regression achieve CV R² of 0.586 and 0.674 respectively, with MAE of 25cm for both respectively. This reduction in performance is due to regularisation effects that constrain coefficient magnitudes, though they provide valuable uncertainty quantification.
 
 <table>
   <tr>
@@ -93,7 +93,11 @@ The Linear Regression model achieved the best predictive performance, with a cro
 </table>
 
 
-Below is a table showing the correlations between each feature and the target variable, this will be further studied by feature importance below.
+Below is a table showing the lineear correlations between each feature and the target variable, this will be further studied by feature importance below. These correlations reflect the strong seasonal patterns observed in the preprocessing analysis. The high correlation between month_sin, which creates a smooth seasonal cycle within the feature, and groundwater changes (r=0.92) directly mirrors the seasonal cycles seen in both the GRACE/GLDAS-derived groundwater data and well measurements, which showed very similar month-to-month patterns throughout 2019. The low correlation with month_cos compared to month_sin indicates that groundwater changes follow the natural hydrological calendar of peak changes during March-April instead of the calendar year cycle. In contrast, the weaker correlations with Sentinel-1 features reflect the complex, regionally-averaged radar patterns that showed unexpected seasonal variations.
+
+
+
+<img src="https://github.com/DomWeisser/Multi-Scale-Groundwater-Monitoring-in-the-Amazon-Integrating-Satellite-and-In-Situ-well-data-with-ML/blob/c9158570697724e23fb444946eb5129f1940845c/Images/feature_correlation_with_wells_target.png?raw=true" alt="image_alt" width="500"/>
 
 
 ## **Uncertainty Analysis**
