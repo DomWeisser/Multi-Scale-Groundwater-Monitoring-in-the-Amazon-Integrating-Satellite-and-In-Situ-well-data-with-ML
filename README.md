@@ -59,7 +59,7 @@ Groundwater Storage Anomaly (GWSA) = TWS - (Soil Moisture + Snow Water + Canopy 
 
 From the GWSA time series, I calculate the **month-on-month change in groundwater storage**, which serves as the primary target variable for prediction in this study.
 
-![image alt](https://github.com/DomWeisser/Multi-Scale-Groundwater-Monitoring-in-the-Amazon-Integrating-Satellite-and-In-Situ-well-data-with-ML/blob/512c8090f7eb86eca8df747d132c71ff4b388a77/Images/grace_gwa_change_analysis.png)
+![image alt](https://github.com/DomWeisser/Multi-Scale-Groundwater-Monitoring-in-the-Amazon-Integrating-Satellite-and-In-Situ-well-data-with-ML/blob/85ab06b473d1dcbc77a8e6e74b3934e96f996ee7/Images/grace_gwa_change_analysis_with_baseline%20(1).png)
 
 
 - **Sentinel-1 Processing:**
@@ -96,7 +96,6 @@ The Linear Regression model achieved the best predictive performance, with a cro
 Below is a table showing the lineear correlations between each feature and the target variable, this will be further studied by feature importance below. These correlations reflect the strong seasonal patterns observed in the preprocessing analysis. The high correlation between month_sin, which creates a smooth seasonal cycle within the feature, and groundwater changes (r=0.92) directly mirrors the seasonal cycles seen in both the GRACE/GLDAS-derived groundwater data and well measurements, which showed very similar month-to-month patterns throughout 2019. The low correlation with month_cos compared to month_sin indicates that groundwater changes follow the natural hydrological calendar of peak changes during March-April instead of the calendar year cycle. In contrast, the weaker correlations with Sentinel-1 features reflect the complex, regionally-averaged radar patterns that showed unexpected seasonal variations.
 
 
-
 <img src="https://github.com/DomWeisser/Multi-Scale-Groundwater-Monitoring-in-the-Amazon-Integrating-Satellite-and-In-Situ-well-data-with-ML/blob/c9158570697724e23fb444946eb5129f1940845c/Images/feature_correlation_with_wells_target.png?raw=true" alt="image_alt" width="500"/>
 
 
@@ -104,31 +103,30 @@ Below is a table showing the lineear correlations between each feature and the t
 
 Understanding how confident we can be in each prediction is crucial, especially with a small dataset of only 12 months. To address this, I implemented two uncertainty quantification methods:
 
-- Bayesian Ridge Regression provides internal model-based uncertainty, estimating prediction intervals of approximately ±23 cm.
+- Bayesian Ridge Regression provides internal model-based uncertainty, estimating prediction intervals of approximately ±22 cm based on the model's inherent parameter uncertainty.
 
-- Bootstrap resampling (100 iterations) captures variability introduced by the data itself, producing wider intervals of ±36 cm.
+- Bootstrap resampling (with 100 iterations) captures variability introduced by the data itself, producing wider intervals of ±36 cm that account for sampling uncertainty in the limited dataset.
 
-Despite the dataset's limited size, results are promising. Bayesian predictions (red squares) closely track actual well measurements (blue circles) throughout the year, successfully capturing seasonal dynamics from +80 cm in the wet season to -70 cm in the dry season. However, the wider bootstrap intervals (green shading) highlight that small sample size introduces variability. The ~60% difference between the two interval widths provides a valuable insight: while the model performs well on available data, the more conservative bootstrap intervals offer a more reliable basis for real-world decision-making.
+Despite the dataset's limited size, results are promising. Bayesian predictions closely track actual well measurements throughout the year, successfully capturing seasonal dynamics from +80 cm during wet season peaks to -70 cm during dry season troughs. The model demonstrates particularly strong performance during critical seasonal transition months. However, the wider botstrap intervals reveal the impact of having only 12 months of data. The bootstrap method accounts for the additional uncertainty from the small sample size, not just the model internal uncertainty. This  shows that while our model works well with the available data, it would be more confident in predictions with a larger dataset. However, since all observed well measurements fall wihtin these wider bounds, they offer appropriate confidence levels for this analysis.
 
-Importantly, the majority of observed values fall within both uncertainty bounds—especially during key seasonal transitions.
-
-![image alt](https://github.com/DomWeisser/Multi-Scale-Groundwater-Monitoring-in-the-Amazon-Integrating-Satellite-and-In-Situ-well-data-with-ML/blob/997f4358d4da4851065c370c9f23a792dd439fc2/Images/uncertainty_time_series.png)
+![image alt](https://github.com/DomWeisser/Multi-Scale-Groundwater-Monitoring-in-the-Amazon-Integrating-Satellite-and-In-Situ-well-data-with-ML/blob/bf609c386a4bc7c36ce68e652b5d52eadb8f9e11/Images/uncertainty_time_series%20(2).png)
 
 ## Feature Importance
 
-Feature importance analysis helps highlight which variables matter most when predicting changes in groundwater storage, key for understanding what drives aquifer behavior. This is especially useful in data-scarce regions like the Amazon, where long-term ground measurements are limited. By showing which remote sensing signals and seasonal trends are most valuable, the analysis can also help focus future data collection efforts.
+Feature importance analysis helps highlight which variables matter most when predicting changes in groundwater storage, key for understanding what drives aquifer behavior. By showing which remote sensing signals and seasonal trends are most valuable, the analysis can also help focus future data collection efforts.
 
-In this project, I used several  methods to assess feature importance. Across the board, GRACE satellite data stood out as the most important predictor, confirming its strong link to groundwater changes. Sentinel-1 radar data, especially VH polarization, was also highly influential in some models, likely reflecting interactions between vegetation and surface water. Seasonal patterns showed moderate importance, especially the cosine signal tied to the annual water cycle. Regularization in Ridge made feature contributions more balanced, while the Bayesian model added uncertainty estimates to the rankings. Overall, the findings reinforce GRACE data as the backbone of groundwater monitoring, with radar inputs offering valuable backup—particularly useful when GRACE data isn’t available.
+In this project, I used a couple methods to understand feature importance. **Permutation importance** measures how much model performance drops when the feature is randomly shuffled (breaking it's relationship with the target) and **coefficient magnitude** measures the raw linear weight each feature receives in the model equation after standardisation. 
 
+Permutation feature importance reveal that GRACE groundwater storage change and Sentinel-1 VH backscatter are the most important features. Sentinel-1 VH backscatter shows this high permutation importance despite low correlation because it captures complex vegetation and surface water interactions not available in gravity measurements. When VH is removed, the model loses critical surface signals that help distringuish different types of groundwater changes, highlighting it's significant potential when used at it's original spatial resolution rather than averaged across the whole region of interst as required by my simplification. Despite month_sin having strong individual correlation and receviing large coefficient weights, it's permutation importance is minimal because GRACE groundwater storage change captures most of the same seasonal signal, making explicit temporal features redundant. GRACE groundwater anomaly (GWA) demonstrates the highest coefficient magnitude in Linear Regression, probably due to it's different data characteristics compared to GRACE groundwater storage change. While storage change ranges from -28 to 16cm with a SD of 16.3cm, GWA represents cumulative anomalies raning from -106 to -19cm with a SD of 30.8, requiring larger coefficients to achieve equivalent predictive impact. 
 
-
-
-
-# Limitations and Uncertainties 
-Several simplifying assumptions introduce uncertainty within my analysis. Averaging four wells obscured local-scale variability, Sentinel-1 backscatter is spatially averaged over a large region, and GRACE/GLDAS data assume regional uniformity across a coarse grid. Furthermore, while the results from the ML models are promising, it needs to be remembered only 12 months of data has been used which constrains model complexity and increases sensitivity to model assumptions. 
+![image_alt](https://github.com/DomWeisser/Multi-Scale-Groundwater-Monitoring-in-the-Amazon-Integrating-Satellite-and-In-Situ-well-data-with-ML/blob/2cd60542b201ee6732e0c14fd8a27b5e54c16aa2/Images/comprehensive_feature_importance%20(1).png)
 
 
-While scale mismatches between point-scale well measurements and coarse-resolution satellite data introduce some uncertainty, the strong correlation (r = 0.888) between the two suggests robust cross-scale consistency within this aquifer system. This project serves as a proof of concept, demonstrating the viability of satellite-driven groundwater prediction in data-sparse regions and laying the groundwork for more detailed, multi-year analysis in the future. Future work should include more well data spread across the region of interest, allowing for interpolation which allows for pixel level analysis with GRACE/GLDAS and Sentinel-1 imagery.
+# Limitations and Future Work
+My analysis applied several simplifications that create oppurtunities for significant future impovements in accuracy and granularity. Spatial averaging was the primary simplification, averaging across four wells to create point based values instead of interpolating across the whole region of interest and similarly averaging Sentinel-1 backscatter across the whole region to create equivalent point based values. Additionally, the 12  month dataset constrained model complexity and limits the understanding of inter-annual change and longer-term groundwater trends.
+
+However, these simplifications reveal important insights that point towards furture research directions. The high permutation importance of Sentinel-1 VH backscatter despite regional averaging suggests that radar-derived vegetation and surface water singals contain valuable information about groundwater dynamics that will become even more powerful at higher resolution. Future work should look into expanding the monitoring network with additional wells distributed across the study region, enabling spatial interpolation and pixel-level analysis. This would unlock the full potential of 10-meter resolution Sentinel-1 data while still using insights from GRACE/GLDAS derived groundwater changes. The combination of ground data with satellite imagery could transform groundwater monitoring from regional averaging to more granular mapping that captures the true complexity of Amazon hydrology and supports managment strategies.
+
 
 # Environmental Impacts
 
@@ -145,6 +143,7 @@ Given this it is out duty as Environmental Data Scientists to make sure the posi
 
 # References
 [1]: https://www.sciencedirect.com/science/article/pii/S2352801X25000384?casa_token=Gf1ryYWVSZ4AAAAA:4xYYbn2YwsatJyetPnysCKJIT_g7G6vWr_DXk65WmILkhuCEi3o3XUv60Lez7jrpOwQPA2u9PA: Groundwater dynamics and hydrogeological processes in the Alter do Chão Aquifer: A case study in Manaus, Amazonas – Brazil
+
 [2]: https://www.sciencedirect.com/science/article/pii/S0895981121004429?casa_token=pW97eOPB26AAAAAA:nFoOVws0NzNC7_ZcMXi1pFmNKiIb85eTcA3K2qo31xKTnkItB9SktC7ndkgilFK3p4zWjRoh4Q: Flow patterns and aquifer recharge controls under Amazon rainforest influence: The case of the Alter do Chão aquifer system
 
 
