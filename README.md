@@ -28,7 +28,7 @@ My analysis focuses on a ~ 280km x 220km area around Manaus, Brazil (60.8°W–5
 
 - Sentinel-1: Sentinel-1 is a satellite mission equipped with synthetic aperture radar (SAR), which operates in all weather conditions and can penetrate cloud cover and vegetation. It uses dual-polarization radar (VV and VH) to detect surface characteristics such as roughness and moisture content.
 
-- In-situ Wells: Groundwater level measurements are obtained from the RIMAS monitoring network, which tracks aquifer behavior across Brazil. For this study, the dataset includes monthly groundwater level changes from four wells within the region of interest. These point-based measurements serve as the target variable for model training.
+- In-situ Wells: Groundwater level measurements are obtained from the RIMAS monitoring network, which tracks aquifer behavior across Brazil. For this study, the dataset includes monthly groundwater level changes from four wells within the region of interest. These point-based measurements serve as the target variable for model training. [3]
 
 
 | Dataset | Source | Temporal Resolution Used | Spatial Resolution | Coverage | Format |
@@ -151,13 +151,18 @@ Given this it is out duty as Environmental Data Scientists to make sure the posi
 # References
 [1]: https://www.sciencedirect.com/science/article/pii/S2352801X25000384?casa_token=Gf1ryYWVSZ4AAAAA:4xYYbn2YwsatJyetPnysCKJIT_g7G6vWr_DXk65WmILkhuCEi3o3XUv60Lez7jrpOwQPA2u9PA: Groundwater dynamics and hydrogeological processes in the Alter do Chão Aquifer: A case study in Manaus, Amazonas – Brazil
 
+
 [2]: https://www.sciencedirect.com/science/article/pii/S0895981121004429?casa_token=pW97eOPB26AAAAAA:nFoOVws0NzNC7_ZcMXi1pFmNKiIb85eTcA3K2qo31xKTnkItB9SktC7ndkgilFK3p4zWjRoh4Q: Flow patterns and aquifer recharge controls under Amazon rainforest influence: The case of the Alter do Chão aquifer system
 
-[3]: 
+
+[3]: https://figshare.com/articles/code/RIMAS_model_Brazil_ipynb/22009562
+
 
 [4]: https://spacepolicyonline.com/news/nasas-grace-fo-five-iridium-satellites-share-a-ride-to-space/#:~:text=At%20a%20pre-launch%20press%20conference%20yesterday%2C%20NASA%20and,77%20million%20Euros%20%28about%20%2490%20million%29%20for%20Germany.
 
+
 [5]: https://www.space.com/copernicus-program
+
 
 [6]: https://www.sciencedirect.com/science/article/abs/pii/S0959652620302560: The environmental impact of emissions from space launches: A comprehensive review
 
