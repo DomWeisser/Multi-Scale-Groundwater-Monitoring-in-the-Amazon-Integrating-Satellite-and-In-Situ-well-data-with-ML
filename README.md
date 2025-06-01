@@ -1,5 +1,6 @@
 # Predicting Monthly Groundwater Storage Changes in the Amazon Basin: A Multi-Sensor Machine Learning Approach Using GRACE, Sentinel-1, and Ground-Based Observations
 
+[![Watch the video](https://github.com/DomWeisser/Multi-Scale-Groundwater-Monitoring-in-the-Amazon-Integrating-Satellite-and-In-Situ-well-data-with-ML/blob/0c936f26e678378f229980a624af0feb58a3a8c7/Images/Screenshot%202025-06-01%20132145.png)](https://www.loom.com/share/7f9294ddcbfd45899d6dc94f38188156?sid=343d850f-b44b-4907-a934-b000f32b8516)
 
 
 # Project Overview
