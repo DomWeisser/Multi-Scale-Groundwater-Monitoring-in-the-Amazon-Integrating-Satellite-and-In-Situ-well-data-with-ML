@@ -2,6 +2,7 @@
 
 [![Watch the video](https://github.com/DomWeisser/Multi-Scale-Groundwater-Monitoring-in-the-Amazon-Integrating-Satellite-and-In-Situ-well-data-with-ML/blob/0c936f26e678378f229980a624af0feb58a3a8c7/Images/Screenshot%202025-06-01%20132145.png)](https://www.loom.com/share/7f9294ddcbfd45899d6dc94f38188156?sid=343d850f-b44b-4907-a934-b000f32b8516)
 
+**Click the Picture to take you to my video explaining my Analysis**
 
 # Project Overview
 Despite the Amazon region’s vast surface water resources, over two-thirds of its urban population rely on groundwater from aquifers for domestic and industrial needs [1]. One of Brazil’s most important freshwater reserves is the Alter do Chão Aquifer (ACA), which stretches beneath parts of the Amazonas, Pará, and Amapá states. However, the monthly patterns and overall behavior of groundwater storage in this aquifer remain poorly understood, especially the link between satellite-based water-storage data and local well-level measurements. Recent extreme droughts (notably in 2016 and 2023) have underscored the urgent need for better insight into these dynamics.
