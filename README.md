@@ -1,5 +1,6 @@
 # Predicting Monthly Groundwater Storage Changes in the Amazon Basin: A Multi-Sensor Machine Learning Approach Using GRACE, Sentinel-1, and Ground-Based Observations
 
+# Video
 [![Watch the video](https://github.com/DomWeisser/Multi-Scale-Groundwater-Monitoring-in-the-Amazon-Integrating-Satellite-and-In-Situ-well-data-with-ML/blob/0c936f26e678378f229980a624af0feb58a3a8c7/Images/Screenshot%202025-06-01%20132145.png)](https://www.loom.com/share/7f9294ddcbfd45899d6dc94f38188156?sid=343d850f-b44b-4907-a934-b000f32b8516)
 
 **Click the Picture to take you to my video explaining my Analysis**
@@ -136,9 +137,9 @@ However, these simplifications reveal important insights that point towards furt
 
 # Environmental Impacts
 
-Running my project on Google Colab consumed approximately 0.5 kWh of energy. However, this excludes the significant data transfer energy costs: downloading 12 months of GRACE satellite data (~6.2 MB total), Sentinel-1 radar imagery (~24 GB total), GLDAS datasets (~300 MB total), and well measurements (~3.3 MB total) likely consumed an additional 1-2 kWh for data transmission and cloud storage access, bringing the total direct computational footprint to over 2 kWh.
-While the direct computational impact remains modest, the project relies on satellite infrastructure with enormous upstream environmental costs that are difficult to quantify but highly significant. The GRACE mission cost ~$500 million and Sentinel-1 ~€400 million, representing substantial embodied carbon from manufacturing, launch operations (each rocket launch produces ~300-400 tons of CO₂), and ongoing mission operations. 
-From a computational efficiency perspective, my analysis leverages standard CPU processing without GPU acceleration, uses vectorised NumPy operations for data processing, and employs lightweight linear regression models rather than deep learning approaches, keeping the computational overhead low. However, the project's environmental impact could be reduced through: migrating to renewable energy-powered cloud computing, implementing more efficient data compression and caching strategies, and developing lightweight model variants for real-time applications. 
+Running my project on Google Colab consumed approximately 0.5 kWh of energy. However, this excludes the significant energy costs of downloading all my datasets: downloading 12 months of GRACE satellite data (~6.2 MB total), Sentinel-1 radar imagery (~24 GB total), GLDAS datasets (~300 MB total), and well measurements (~3.3 MB total) likely consumed an additional 1-2 kWh for data transmission and cloud storage access, bringing the total direct computational footprint to over 2 kWh.
+While the direct computational impact remains modest, the project relies on satellite infrastructure with enormous upstream environmental costs that are difficult to quantify but highly significant. The GRACE mission cost ~$500 million [4] and the total cost for the Copernicus missions from ESA cost ~€3.24 billion between 2014-2021 [5], reflecting significant embodied carbon across satellite manufacturing, launch operations and mission lifecycles. Each rocket launch can emit tons of CO₂, along with other compounds that contribute to stratopsheric ozone depletion, particularly from solid rocket motors, which have been shown to cause ozone loss orders of magnitude greater than liquid-fueled alternatives [6]. While my analysis maintains relatively low computational costs by using standard CPU processing and lightweight regression models, the total environmental foorptint extends beyond the compute cycles. 
+
 Given this it is out duty as Environmental Data Scientists to make sure the positive impacts our research and analysis produces outweighs these enviornmental costs. With further development of my project the results will enable sustainable groundwater managment in the Amazon basin, support precision agriculture to reduce water waste, facilitate early drought detection and provide critical data for climate adaptation startegies in one of Earth's most important ecosystems. This project aims to connect communities most affected by climate change with cutting-edge technologies, recognising that these innovations are frequently not deployed to those who need them most
 
 
@@ -152,4 +153,11 @@ Given this it is out duty as Environmental Data Scientists to make sure the posi
 
 [2]: https://www.sciencedirect.com/science/article/pii/S0895981121004429?casa_token=pW97eOPB26AAAAAA:nFoOVws0NzNC7_ZcMXi1pFmNKiIb85eTcA3K2qo31xKTnkItB9SktC7ndkgilFK3p4zWjRoh4Q: Flow patterns and aquifer recharge controls under Amazon rainforest influence: The case of the Alter do Chão aquifer system
 
+[3]: 
+
+[4]: https://spacepolicyonline.com/news/nasas-grace-fo-five-iridium-satellites-share-a-ride-to-space/#:~:text=At%20a%20pre-launch%20press%20conference%20yesterday%2C%20NASA%20and,77%20million%20Euros%20%28about%20%2490%20million%29%20for%20Germany.
+
+[5]: https://www.space.com/copernicus-program
+
+[6]: https://www.sciencedirect.com/science/article/abs/pii/S0959652620302560: The environmental impact of emissions from space launches: A comprehensive review
 
